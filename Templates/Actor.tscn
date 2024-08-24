@@ -1,13 +1,19 @@
-[gd_scene load_steps=12 format=3 uid="uid://bkv5nljjr0t6v"]
+[gd_scene load_steps=18 format=3 uid="uid://bkv5nljjr0t6v"]
 
 [ext_resource type="Script" path="res://Templates/Actor.cs" id="1_4kan6"]
+[ext_resource type="Script" path="res://Common/Plugins/StatPlugin.cs" id="2_8d3bd"]
 [ext_resource type="Texture2D" uid="uid://coy3akynnwprd" path="res://Resources/LightShape.tres" id="2_fv82x"]
+[ext_resource type="Script" path="res://Common/Plugins/StatProgressBarPlugin.cs" id="3_rquf7"]
 [ext_resource type="SpriteFrames" uid="uid://djs8tgkx8bsww" path="res://Resources/Soldier.tres" id="3_uskxw"]
 [ext_resource type="SpriteFrames" uid="uid://cdnac4umnov2v" path="res://Resources/Slash.tres" id="4_lkds2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bd118"]
 radius = 4.0
 height = 12.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gm7rf"]
+radius = 9.0
+height = 36.0
 
 [sub_resource type="Gradient" id="Gradient_jp62q"]
 colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
@@ -18,22 +24,61 @@ gradient = SubResource("Gradient_jp62q")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_afams"]
 texture = SubResource("GradientTexture1D_rhwt1")
 
-[sub_resource type="Gradient" id="Gradient_1mgte"]
+[sub_resource type="Gradient" id="Gradient_63pds"]
 colors = PackedColorArray(0, 1, 0, 1, 0, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2300q"]
+gradient = SubResource("Gradient_63pds")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ttmp8"]
+texture = SubResource("GradientTexture1D_2300q")
+
+[sub_resource type="Gradient" id="Gradient_1mgte"]
+offsets = PackedFloat32Array(0, 0.997148)
+colors = PackedColorArray(1, 1, 0, 1, 1, 1, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_76jp2"]
 gradient = SubResource("Gradient_1mgte")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kx2ty"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0hnc4"]
 texture = SubResource("GradientTexture1D_76jp2")
 
-[node name="Actor" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "attackSprite", "shape", "light", "hook")]
+[node name="Actor" type="CharacterBody2D" node_paths=PackedStringArray("HealthPoints", "SkillPoints", "HitBox", "HitArea", "sprite", "attackSprite", "shape", "light", "hook")]
 script = ExtResource("1_4kan6")
+HealthPoints = NodePath("Plugins/HPPlugin")
+SkillPoints = NodePath("Plugins/SPPlugin")
+HitBox = NodePath("Attack/HitBox/Shape")
+HitArea = NodePath("Attack/HitBox")
 sprite = NodePath("Sprite")
 attackSprite = NodePath("Attack")
 shape = NodePath("Shape")
 light = NodePath("Light")
 hook = NodePath("Hook")
+
+[node name="Plugins" type="Node" parent="."]
+
+[node name="HPPlugin" type="Node" parent="Plugins"]
+script = ExtResource("2_8d3bd")
+Tag = "HP"
+MaxValue = 100.0
+DefaultValue = 100.0
+
+[node name="HPProgressBarPlugin" type="Node" parent="Plugins" node_paths=PackedStringArray("ProgressBar", "Stat")]
+script = ExtResource("3_rquf7")
+ProgressBar = NodePath("../../HPBar")
+Stat = NodePath("../HPPlugin")
+
+[node name="SPPlugin" type="Node" parent="Plugins"]
+script = ExtResource("2_8d3bd")
+Tag = "SP"
+MaxValue = 100.0
+DefaultValue = 100.0
+RechargeRate = 0.5
+
+[node name="SPProgressBarPlugin" type="Node" parent="Plugins" node_paths=PackedStringArray("ProgressBar", "Stat")]
+script = ExtResource("3_rquf7")
+ProgressBar = NodePath("../../SPBar")
+Stat = NodePath("../SPPlugin")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -6)
@@ -55,12 +100,19 @@ frame_progress = 0.370451
 [node name="Attack" type="AnimatedSprite2D" parent="."]
 position = Vector2(18, -13)
 sprite_frames = ExtResource("4_lkds2")
-frame_progress = 0.218791
+frame_progress = 0.73406
+
+[node name="HitBox" type="Area2D" parent="Attack"]
+
+[node name="Shape" type="CollisionShape2D" parent="Attack/HitBox"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_gm7rf")
+disabled = true
 
 [node name="Hook" type="Marker2D" parent="."]
 position = Vector2(0, -4)
 
-[node name="LifeBar" type="ProgressBar" parent="."]
+[node name="HPBar" type="ProgressBar" parent="."]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -73,7 +125,26 @@ offset_bottom = -17.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/background = SubResource("StyleBoxTexture_afams")
-theme_override_styles/fill = SubResource("StyleBoxTexture_kx2ty")
+theme_override_styles/fill = SubResource("StyleBoxTexture_ttmp8")
+max_value = 10.0
+step = 1.0
+value = 2.0
+show_percentage = false
+
+[node name="SPBar" type="ProgressBar" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -23.0
+offset_right = 6.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxTexture_afams")
+theme_override_styles/fill = SubResource("StyleBoxTexture_0hnc4")
 max_value = 10.0
 step = 1.0
 value = 2.0

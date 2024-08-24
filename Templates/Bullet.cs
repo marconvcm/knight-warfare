@@ -9,6 +9,9 @@ public partial class Bullet : Area2D
    private Vector2 InitialPosition = Vector2.Zero;
 
    [Export]
+   public Node2D Creator;
+
+   [Export]
    public float DistanceLifeSpan = 200f;
 
    [Export]
@@ -35,8 +38,13 @@ public partial class Bullet : Area2D
 
       BodyEntered += (body) =>
       {
-         if (body is not Player)
+         if (body != Creator)
          {
+            if (body is Actor actor)
+            {
+               actor.Damage(10);
+            }
+            
             QueueFree();
          }
       };

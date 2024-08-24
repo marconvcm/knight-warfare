@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxggrcf2dk0sg"]
+
+[ext_resource type="PackedScene" uid="uid://bkv5nljjr0t6v" path="res://Templates/Actor.tscn" id="1_qmaaf"]
+[ext_resource type="Script" path="res://Templates/Minion.cs" id="2_8ue1s"]
+
+[node name="Minion" instance=ExtResource("1_qmaaf")]
+script = ExtResource("2_8ue1s")
+PlayerPath = null
+AttackRange = 30.0
+FireRange = 200.0
+
+[node name="Shape" parent="Attack/HitBox" index="0"]
+position = Vector2(0, 0)

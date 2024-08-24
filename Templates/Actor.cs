@@ -1,9 +1,9 @@
-using System;
-using System.Xml.Serialization;
 using Godot;
 
 public partial class Actor : CharacterBody2D
 {
+   private PackedScene BulletTemplate = GD.Load<PackedScene>("res://Templates/Bullet.tscn");
+
    public const float GRAVITY = 9.81f;
 
    public const float GOLDEN_RATIO = 1.61803398875f;
@@ -23,10 +23,28 @@ public partial class Actor : CharacterBody2D
    [Export]
    public int JumpMax { get; set; } = 2;
 
+   [Export]
+   public float FireCost { get; set; }
+
+   [Export]
+   public float DashCost { get; set; }
+
+   [Export]
+   public StatPlugin HealthPoints { get; set; }
+
+   [Export]
+   public StatPlugin SkillPoints { get; set; }
+
+   [Export]
+   public CollisionShape2D HitBox { get; set; }
+
+   [Export]
+   public Area2D HitArea { get; set; }
 
    public Vector2 Direction { get; set; } = Vector2.Zero;
 
    public ActorState CurrentState { get; set; } = ActorState.Idle;
+   
 
    public float WalkingSpeed
    {
@@ -66,17 +84,25 @@ public partial class Actor : CharacterBody2D
    [Export]
    public Marker2D hook;
 
-   public virtual Vector2 GetInputDirection()
+   public virtual Vector2 GetInputDirection() => Vector2.Zero;
+
+   private Bullet SpawnBullet() => BulletTemplate.Instantiate<Bullet>();
+
+   public override void _Ready()
    {
-      return Vector2.Zero;
+      AttackPosition = attackSprite.Position;
+      SpawnBullet().QueueFree();
+      HealthPoints.ValueChanged += OnTakeDamage;
+      HitArea.BodyEntered += (body) =>
+      {
+         if (body is Minion minion)
+         {
+            minion.Damage(15.0f);
+         }
+      };
    }
 
-    public override void _Ready()
-    {
-        AttackPosition = attackSprite.Position;
-    }
-
-    public void Jump()
+   public void Jump()
    {
       JumpCount++;
       if (JumpCount >= JumpMax) { return; }
@@ -85,15 +111,38 @@ public partial class Actor : CharacterBody2D
 
    public void Dash()
    {
-      if (DashRefresh > 0.0f) { return; }
+      if (DashRefresh > 0.0f || SkillPoints.CurrentValue < DashCost) { return; }
       DashRefresh = 1.8f;
       Velocity = new Vector2(Direction.X * RunningSpeed * 3, Velocity.Y);
+      SkillPoints.Subtract(DashCost);
    }
 
    public void Attack()
    {
       if (AttackRefresh > 0.0f || CurrentState.IsDashing()) { return; }
       AttackRefresh = 1.0f;
+   }
+
+   public void Fire()
+   {
+      if (SkillPoints.CurrentValue > FireCost)
+      {
+         Bullet bullet = SpawnBullet();
+         bullet.Direction = sprite.FlipH ? Vector2.Left : Vector2.Right;
+         bullet.Position = hook.GlobalPosition;
+         bullet.Creator = this;
+         GetParent().AddChild(bullet);
+         if (bullet.Direction == Vector2.Left)
+         {
+            bullet.FlipLeft();
+         }
+         SkillPoints.Subtract(FireCost);
+      }
+   }
+   public void Damage(float damage)
+   {
+      // Put tween here
+      HealthPoints.Subtract(damage);
    }
 
    private void UpdateAnimation()
@@ -111,17 +160,22 @@ public partial class Actor : CharacterBody2D
          sprite.Play(CurrentState.Animation);
       }
 
-      if (CurrentState.IsAttacking()) 
+      if (CurrentState.IsAttacking())
       {
-         if (sprite.FlipH) {
+         if (sprite.FlipH)
+         {
             attackSprite.Position = AttackPosition * new Vector2(-1, 1);
             attackSprite.FlipH = true;
-         } else {
+         }
+         else
+         {
             attackSprite.Position = AttackPosition * new Vector2(1, 1);
             attackSprite.FlipH = false;
          }
          attackSprite.Play();
-      } else {
+      }
+      else
+      {
          attackSprite.Stop();
       }
    }
@@ -163,9 +217,11 @@ public partial class Actor : CharacterBody2D
       if (AttackRefresh > 0.0f)
       {
          CurrentState = ActorState.Attacking;
+         HitBox.Disabled = attackSprite.Frame > 3;
          if (attackSprite.IsPlaying() && attackSprite.Frame > 4)
          {
             AttackRefresh = -1.0f;
+            HitBox.Disabled = true;
          }
       }
    }
@@ -177,6 +233,14 @@ public partial class Actor : CharacterBody2D
       UpdateAnimation();
       Velocity = GetNextVelocity(delta);
       MoveAndSlide();
+   }
+
+   private void OnTakeDamage(float value)
+   {
+      if (HealthPoints.IsEmpty)
+      {
+         QueueFree();
+      }
    }
 
    private Vector2 GetNextVelocity(double delta)
@@ -208,7 +272,7 @@ public partial class Actor : CharacterBody2D
 
       if (!IsOnFloor())
       {
-         velocity = new Vector2(velocity.X, velocity.Y + GRAVITY);
+         velocity = new Vector2(velocity.X, velocity.Y + (GRAVITY * 1.2f));
       }
 
       return velocity;
