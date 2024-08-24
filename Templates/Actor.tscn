@@ -1,0 +1,83 @@
+[gd_scene load_steps=12 format=3 uid="uid://bkv5nljjr0t6v"]
+
+[ext_resource type="Script" path="res://Templates/Actor.cs" id="1_4kan6"]
+[ext_resource type="Texture2D" uid="uid://coy3akynnwprd" path="res://Resources/LightShape.tres" id="2_fv82x"]
+[ext_resource type="SpriteFrames" uid="uid://djs8tgkx8bsww" path="res://Resources/Soldier.tres" id="3_uskxw"]
+[ext_resource type="SpriteFrames" uid="uid://cdnac4umnov2v" path="res://Resources/Slash.tres" id="4_lkds2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bd118"]
+radius = 4.0
+height = 12.0
+
+[sub_resource type="Gradient" id="Gradient_jp62q"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_rhwt1"]
+gradient = SubResource("Gradient_jp62q")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_afams"]
+texture = SubResource("GradientTexture1D_rhwt1")
+
+[sub_resource type="Gradient" id="Gradient_1mgte"]
+colors = PackedColorArray(0, 1, 0, 1, 0, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_76jp2"]
+gradient = SubResource("Gradient_1mgte")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kx2ty"]
+texture = SubResource("GradientTexture1D_76jp2")
+
+[node name="Actor" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "attackSprite", "shape", "light", "hook")]
+script = ExtResource("1_4kan6")
+sprite = NodePath("Sprite")
+attackSprite = NodePath("Attack")
+shape = NodePath("Shape")
+light = NodePath("Light")
+hook = NodePath("Hook")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("CapsuleShape2D_bd118")
+
+[node name="Light" type="PointLight2D" parent="."]
+position = Vector2(0, -9)
+color = Color(1, 1, 0.584314, 1)
+energy = 0.5
+texture = ExtResource("2_fv82x")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -15)
+sprite_frames = ExtResource("3_uskxw")
+animation = &"attack"
+autoplay = "attack"
+frame_progress = 0.370451
+
+[node name="Attack" type="AnimatedSprite2D" parent="."]
+position = Vector2(18, -13)
+sprite_frames = ExtResource("4_lkds2")
+frame_progress = 0.218791
+
+[node name="Hook" type="Marker2D" parent="."]
+position = Vector2(0, -4)
+
+[node name="LifeBar" type="ProgressBar" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -6.0
+offset_top = -19.0
+offset_right = 6.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxTexture_afams")
+theme_override_styles/fill = SubResource("StyleBoxTexture_kx2ty")
+max_value = 10.0
+step = 1.0
+value = 2.0
+show_percentage = false
+
+[connection signal="animation_looped" from="Sprite" to="." method="_on_sprite_animation_looped"]
+[connection signal="animation_looped" from="Attack" to="." method="_on_sprite_animation_looped"]

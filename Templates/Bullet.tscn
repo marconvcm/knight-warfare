@@ -1,0 +1,80 @@
+[gd_scene load_steps=11 format=3 uid="uid://c0c2ugwjdxhg2"]
+
+[ext_resource type="Script" path="res://Templates/Bullet.cs" id="1_4cbog"]
+[ext_resource type="Texture2D" uid="uid://80xcene5l4p2" path="res://Assets/VFX/All_Fire_Bullet_Pixel_16x16_00.png" id="1_e7w0e"]
+[ext_resource type="Texture2D" uid="uid://coy3akynnwprd" path="res://Resources/LightShape.tres" id="2_oelax"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_elpoe"]
+radius = 5.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2atd"]
+atlas = ExtResource("1_e7w0e")
+region = Rect2(96, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gygt8"]
+atlas = ExtResource("1_e7w0e")
+region = Rect2(112, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1y1yv"]
+atlas = ExtResource("1_e7w0e")
+region = Rect2(128, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_scn72"]
+atlas = ExtResource("1_e7w0e")
+region = Rect2(144, 160, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mt33n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2atd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gygt8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1y1yv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_scn72")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_gvl5w"]
+offsets = PackedFloat32Array(0, 0.675926, 1)
+colors = PackedColorArray(0.980392, 0.415686, 0.0352941, 1, 1, 0.988235, 0.254902, 1, 1, 0.9875, 0.25, 0)
+
+[node name="Bullet" type="Area2D" node_paths=PackedStringArray("Sprite", "Shape", "Light", "Particles")]
+script = ExtResource("1_4cbog")
+Sprite = NodePath("Sprite")
+Shape = NodePath("Shape")
+Light = NodePath("Light")
+Particles = NodePath("Particles")
+speed = 200.0
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(2, 0)
+shape = SubResource("CircleShape2D_elpoe")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -1)
+sprite_frames = SubResource("SpriteFrames_mt33n")
+autoplay = "default"
+frame_progress = 0.317618
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+lifetime = 0.4
+randomness = 0.15
+emission_shape = 3
+emission_rect_extents = Vector2(2, 2)
+gravity = Vector2(-200, 0)
+color = Color(1, 0.988235, 0.254902, 1)
+color_ramp = SubResource("Gradient_gvl5w")
+
+[node name="Light" type="PointLight2D" parent="."]
+color = Color(1, 1, 0.290196, 1)
+texture = ExtResource("2_oelax")

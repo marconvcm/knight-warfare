@@ -1,0 +1,39 @@
+[gd_resource type="SpriteFrames" load_steps=6 format=3 uid="uid://ca5tbuclr8ysi"]
+
+[ext_resource type="Texture2D" uid="uid://ia01ncuvpret" path="res://Assets/Chars/Without Outline/MiniMage.png" id="1_qs47s"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qr2lg"]
+atlas = ExtResource("1_qs47s")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kgml0"]
+atlas = ExtResource("1_qs47s")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5fosr"]
+atlas = ExtResource("1_qs47s")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a14i2"]
+atlas = ExtResource("1_qs47s")
+region = Rect2(96, 0, 32, 32)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qr2lg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kgml0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5fosr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a14i2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]

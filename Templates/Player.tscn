@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dwn8dmb3sa17j"]
+
+[ext_resource type="PackedScene" uid="uid://bkv5nljjr0t6v" path="res://Templates/Actor.tscn" id="1_mivhe"]
+[ext_resource type="Script" path="res://Templates/Player.cs" id="2_wbjk8"]
+
+[node name="Player" node_paths=PackedStringArray("camera") instance=ExtResource("1_mivhe")]
+script = ExtResource("2_wbjk8")
+camera = NodePath("Camera")
+
+[node name="Attack" parent="." index="3"]
+position = Vector2(14, -15)
+frame_progress = 0.473163
+
+[node name="Camera" type="Camera2D" parent="." index="4"]
+position = Vector2(0, -36)
+zoom = Vector2(2, 2)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="Hook" parent="." index="5"]
+position = Vector2(0, -7)
+
+[node name="LifeBar" parent="." index="6"]
+value = 10.0
