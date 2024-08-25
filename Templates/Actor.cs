@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Godot;
 
 public partial class Actor : CharacterBody2D
@@ -30,6 +31,18 @@ public partial class Actor : CharacterBody2D
    public float DashCost { get; set; }
 
    [Export]
+   public float KnockbackForce { get; set; } = 80.0f;
+
+   [Export]
+   public float KnockbackDuration { get; set; } = 1.0f;
+
+   [Export]
+   public Vector2 KnockbackDirection { get; set; } = Vector2.Zero;
+
+   [Export]
+   public float KnockbackTimer { get; set; } = 0.0f;
+
+   [Export]
    public StatPlugin HealthPoints { get; set; }
 
    [Export]
@@ -41,10 +54,23 @@ public partial class Actor : CharacterBody2D
    [Export]
    public Area2D HitArea { get; set; }
 
+   [Export]
+   public float GravityScale { get; set; } = 1.0f;
+
+   public float Gravity { get { return GRAVITY * GravityScale; } }
+
    public Vector2 Direction { get; set; } = Vector2.Zero;
 
    public ActorState CurrentState { get; set; } = ActorState.Idle;
-   
+
+   public Vector2 FaceDirection
+   {
+      get
+      {
+         return sprite.FlipH ? Vector2.Left : Vector2.Right;
+      }
+   }
+
 
    public float WalkingSpeed
    {
@@ -95,9 +121,9 @@ public partial class Actor : CharacterBody2D
       HealthPoints.ValueChanged += OnTakeDamage;
       HitArea.BodyEntered += (body) =>
       {
-         if (body is Minion minion)
+         if (body is Actor actor && body != this)
          {
-            minion.Damage(15.0f);
+            actor.Damage(15.0f, Position);
          }
       };
    }
@@ -113,7 +139,6 @@ public partial class Actor : CharacterBody2D
    {
       if (DashRefresh > 0.0f || SkillPoints.CurrentValue < DashCost) { return; }
       DashRefresh = 1.8f;
-      Velocity = new Vector2(Direction.X * RunningSpeed * 3, Velocity.Y);
       SkillPoints.Subtract(DashCost);
    }
 
@@ -121,6 +146,13 @@ public partial class Actor : CharacterBody2D
    {
       if (AttackRefresh > 0.0f || CurrentState.IsDashing()) { return; }
       AttackRefresh = 1.0f;
+   }
+
+   public void Knockback(Vector2 sourcePosition)
+   {
+      Vector2 direction = (GlobalPosition - sourcePosition).Normalized();
+      KnockbackDirection = direction * KnockbackForce;
+      KnockbackTimer = KnockbackDuration;
    }
 
    public void Fire()
@@ -139,9 +171,9 @@ public partial class Actor : CharacterBody2D
          SkillPoints.Subtract(FireCost);
       }
    }
-   public void Damage(float damage)
+   public void Damage(float damage, Vector2 direction)
    {
-      // Put tween here
+      Knockback(direction);
       HealthPoints.Subtract(damage);
    }
 
@@ -224,6 +256,11 @@ public partial class Actor : CharacterBody2D
             HitBox.Disabled = true;
          }
       }
+
+      if (KnockbackTimer > 0.0f)
+      {
+         KnockbackTimer -= 0.1f;
+      }
    }
 
    public override void _PhysicsProcess(double delta)
@@ -247,32 +284,33 @@ public partial class Actor : CharacterBody2D
    {
       Vector2 velocity = Velocity;
 
-      if (Direction == Vector2.Zero)
+      if (Direction == Vector2.Zero && KnockbackTimer <= 0.0f)
       {
          velocity = new Vector2(0, velocity.Y);
       }
       else
       {
-         if (CurrentState.IsDashing())
-         {
-            velocity = new Vector2(Direction.X * RunningSpeed * 3 * DashRefresh, velocity.Y);
-         }
-         else
-         {
-            if (CurrentState.IsAttacking() && IsOnFloor())
-            {
-               velocity = new Vector2(Direction.X * (RunningSpeed / 2), velocity.Y);
-            }
-            else
-            {
-               velocity = new Vector2(Direction.X * RunningSpeed, velocity.Y);
-            }
-         }
+         velocity = new Vector2(Direction.X * RunningSpeed, velocity.Y);
+      }
+
+      if (CurrentState.IsAttacking() && IsOnFloor())
+      {
+         velocity = new Vector2(Direction.X * (RunningSpeed / 2), velocity.Y);
+      }
+
+      if (CurrentState.IsDashing())
+      {
+         velocity = new Vector2(FaceDirection.X * RunningSpeed * 3.0f * DashRefresh, 0);
+      }
+
+      if (KnockbackTimer > 0.0f)
+      {
+         velocity = new Vector2(KnockbackDirection.X, velocity.Y);
       }
 
       if (!IsOnFloor())
       {
-         velocity = new Vector2(velocity.X, velocity.Y + (GRAVITY * 1.2f));
+         velocity = new Vector2(velocity.X, velocity.Y + (Gravity * 1.2f));
       }
 
       return velocity;

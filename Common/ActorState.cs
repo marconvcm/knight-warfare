@@ -26,4 +26,8 @@ public struct ActorState
    public bool IsDashing() => Animation == Dashing.Animation && KeepAtFrame == Dashing.KeepAtFrame;
 
    public bool IsAttacking() => Animation == Attacking.Animation;
+
+   public bool IsShooting() => Animation == Shooting.Animation;
+
+   public bool IsIdle() => Animation == Idle.Animation;
 }

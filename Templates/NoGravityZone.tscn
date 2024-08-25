@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxxi457hqe1un"]
+
+[ext_resource type="Script" path="res://Templates/NoGravityZone.cs" id="1_oc43i"]
+
+[node name="NoGravityZone" type="Area2D"]
+script = ExtResource("1_oc43i")

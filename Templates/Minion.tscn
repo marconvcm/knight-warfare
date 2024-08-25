@@ -8,6 +8,3 @@ script = ExtResource("2_8ue1s")
 PlayerPath = null
 AttackRange = 30.0
 FireRange = 200.0
-
-[node name="Shape" parent="Attack/HitBox" index="0"]
-position = Vector2(0, 0)

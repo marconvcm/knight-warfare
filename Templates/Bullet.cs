@@ -42,7 +42,7 @@ public partial class Bullet : Area2D
          {
             if (body is Actor actor)
             {
-               actor.Damage(10);
+               actor.Damage(10, Creator.GlobalPosition);
             }
             
             QueueFree();

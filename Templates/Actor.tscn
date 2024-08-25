@@ -87,7 +87,7 @@ shape = SubResource("CapsuleShape2D_bd118")
 [node name="Light" type="PointLight2D" parent="."]
 position = Vector2(0, -9)
 color = Color(1, 1, 0.584314, 1)
-energy = 0.5
+energy = 0.1
 texture = ExtResource("2_fv82x")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
@@ -100,7 +100,7 @@ frame_progress = 0.370451
 [node name="Attack" type="AnimatedSprite2D" parent="."]
 position = Vector2(18, -13)
 sprite_frames = ExtResource("4_lkds2")
-frame_progress = 0.73406
+frame_progress = 0.705384
 
 [node name="HitBox" type="Area2D" parent="Attack"]
 
