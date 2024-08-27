@@ -20,6 +20,7 @@ public partial class Minion : Actor
 
 
       Player = GetNode<Player>(PlayerPath);
+      Player = GetParent().GetNode<Player>("Player");
    }
 
    public override Vector2 GetInputDirection()

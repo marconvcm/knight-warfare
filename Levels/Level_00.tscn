@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://brptuoxg75654"]
+[gd_scene load_steps=16 format=4 uid="uid://brptuoxg75654"]
 
 [ext_resource type="Texture2D" uid="uid://bx2gt3bn7n8l3" path="res://Assets/DayPlatformer/PNG/clouds.png" id="1_2so7u"]
 [ext_resource type="Texture2D" uid="uid://by2ymsnd5bnrk" path="res://Assets/Terrain.png" id="1_fsdtw"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dwn8dmb3sa17j" path="res://Templates/Player.tscn" id="3_wkibv"]
 [ext_resource type="Texture2D" uid="uid://d12ry6qik8ygo" path="res://Assets/Mockup.svg" id="4_2mm1w"]
 [ext_resource type="PackedScene" uid="uid://dxxi457hqe1un" path="res://Templates/NoGravityZone.tscn" id="5_fu57j"]
+[ext_resource type="Script" path="res://Templates/Generator.cs" id="8_2xoum"]
 
 [sub_resource type="Gradient" id="Gradient_3gn6o"]
 offsets = PackedFloat32Array(0, 0.139474, 0.32807, 0.551754, 0.729825, 1)
@@ -632,6 +633,8 @@ metadata/_edit_lock_ = true
 position = Vector2(309, 240)
 topLeftLimit = NodePath("../TopLeft")
 bottomRightLimit = NodePath("../BottomRight")
+FireCost = 0.0
+DashCost = 0.0
 metadata/_edit_lock_ = true
 
 [node name="TopLeft" type="Marker2D" parent="."]
@@ -642,8 +645,24 @@ position = Vector2(1216, 544)
 
 [node name="Minion" parent="." instance=ExtResource("3_ijsxi")]
 position = Vector2(712, 204)
-PlayerPath = NodePath("")
+PlayerPath = NodePath("../Player")
 
 [node name="Minion2" parent="." instance=ExtResource("3_ijsxi")]
 position = Vector2(1080, 104)
 PlayerPath = NodePath("")
+
+[node name="Generator" type="StaticBody2D" parent="."]
+position = Vector2(0, -2)
+script = ExtResource("8_2xoum")
+EnemyPrefab = ExtResource("3_ijsxi")
+SpawnPoints = Array[NodePath]([NodePath("SpawnPoint1"), NodePath("SpawnPoint2"), NodePath("SpawnPoint3")])
+SpawnInterval = 1.0
+
+[node name="SpawnPoint1" type="StaticBody2D" parent="Generator"]
+position = Vector2(289, 231)
+
+[node name="SpawnPoint2" type="StaticBody2D" parent="Generator"]
+position = Vector2(-87, 184)
+
+[node name="SpawnPoint3" type="StaticBody2D" parent="Generator"]
+position = Vector2(109, 72)
