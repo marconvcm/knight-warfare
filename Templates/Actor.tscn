@@ -43,8 +43,9 @@ gradient = SubResource("Gradient_1mgte")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0hnc4"]
 texture = SubResource("GradientTexture1D_76jp2")
 
-[node name="Actor" type="CharacterBody2D" node_paths=PackedStringArray("HealthPoints", "SkillPoints", "HitBox", "HitArea", "sprite", "attackSprite", "shape", "light", "hook")]
+[node name="Actor" type="CharacterBody2D" node_paths=PackedStringArray("HealthPoints", "SkillPoints", "HitBox", "HitArea", "sprite", "attackSprite", "shape", "light", "hook", "Sensor")]
 script = ExtResource("1_4kan6")
+JumpHeight = 13.0
 HealthPoints = NodePath("Plugins/HPPlugin")
 SkillPoints = NodePath("Plugins/SPPlugin")
 HitBox = NodePath("Attack/HitBox/Shape")
@@ -54,6 +55,7 @@ attackSprite = NodePath("Attack")
 shape = NodePath("Shape")
 light = NodePath("Light")
 hook = NodePath("Hook")
+Sensor = NodePath("Sensor")
 
 [node name="Plugins" type="Node" parent="."]
 
@@ -95,12 +97,12 @@ position = Vector2(0, -15)
 sprite_frames = ExtResource("3_uskxw")
 animation = &"attack"
 autoplay = "attack"
-frame_progress = 0.370451
+frame_progress = 0.0183869
 
 [node name="Attack" type="AnimatedSprite2D" parent="."]
 position = Vector2(18, -13)
 sprite_frames = ExtResource("4_lkds2")
-frame_progress = 0.705384
+frame_progress = 0.303992
 
 [node name="HitBox" type="Area2D" parent="Attack"]
 
@@ -149,6 +151,8 @@ max_value = 10.0
 step = 1.0
 value = 2.0
 show_percentage = false
+
+[node name="Sensor" type="Area2D" parent="."]
 
 [connection signal="animation_looped" from="Sprite" to="." method="_on_sprite_animation_looped"]
 [connection signal="animation_looped" from="Attack" to="." method="_on_sprite_animation_looped"]

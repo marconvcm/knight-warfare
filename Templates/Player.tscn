@@ -1,16 +1,38 @@
-[gd_scene load_steps=3 format=3 uid="uid://dwn8dmb3sa17j"]
+[gd_scene load_steps=8 format=3 uid="uid://dwn8dmb3sa17j"]
 
 [ext_resource type="PackedScene" uid="uid://bkv5nljjr0t6v" path="res://Templates/Actor.tscn" id="1_mivhe"]
 [ext_resource type="Script" path="res://Templates/Player.cs" id="2_wbjk8"]
+[ext_resource type="Script" path="res://Common/Plugins/TweenPlugin.cs" id="3_n8son"]
+[ext_resource type="FontFile" uid="uid://wkudunktfqml" path="res://Assets/Fonts/PixelOperatorMono8-Bold.ttf" id="4_2jfbb"]
+[ext_resource type="Script" path="res://Common/Plugins/TweenPluginResource.cs" id="4_mlpj1"]
 
-[node name="Player" node_paths=PackedStringArray("camera") instance=ExtResource("1_mivhe")]
+[sub_resource type="Resource" id="Resource_ltout"]
+script = ExtResource("4_mlpj1")
+Duration = 0.5
+PositionOffset = Vector2(0, 0)
+ScaleOffset = Vector2(0, 0)
+TransitionType = 0
+EaseType = 0
+EnableOpacity = true
+AutoPlay = false
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mcfo2"]
+height = 24.0
+
+[node name="Player" node_paths=PackedStringArray("HintTweenPlugin", "camera") instance=ExtResource("1_mivhe")]
 script = ExtResource("2_wbjk8")
+HintTweenPlugin = NodePath("Plugins/HintTweenPlugin")
 camera = NodePath("Camera")
 FireCost = 10.0
 DashCost = 20.0
 
 [node name="SPPlugin" parent="Plugins" index="2"]
 RechargeRate = 10.0
+
+[node name="HintTweenPlugin" type="Node" parent="Plugins" index="4" node_paths=PackedStringArray("target")]
+script = ExtResource("3_n8son")
+target = NodePath("../../Hint")
+resource = SubResource("Resource_ltout")
 
 [node name="Camera" type="Camera2D" parent="." index="4"]
 position = Vector2(0, -36)
@@ -24,3 +46,26 @@ frame_progress = 0.473163
 
 [node name="Hook" parent="." index="6"]
 position = Vector2(0, -7)
+
+[node name="Shape" type="CollisionShape2D" parent="Sensor" index="0"]
+position = Vector2(0, -7)
+shape = SubResource("CapsuleShape2D_mcfo2")
+
+[node name="Hint" type="Node2D" parent="." index="10"]
+
+[node name="Label" type="RichTextLabel" parent="Hint" index="0"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -6.0
+offset_top = -36.0
+offset_right = 6.0
+offset_bottom = -28.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("4_2jfbb")
+theme_override_font_sizes/normal_font_size = 8
+bbcode_enabled = true
+text = "[center]![/center]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2

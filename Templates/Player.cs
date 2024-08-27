@@ -10,9 +10,12 @@ public partial class Player : Actor
    public Marker2D bottomRightLimit;
 
    [Export]
+   public TweenPlugin HintTweenPlugin;
+
+   [Export]
    public Camera2D camera;
 
-   public override Vector2 GetInputDirection() => InputManager.GetDirection();
+   public override Vector2 GetInputDirection() => IsStopped ? Vector2.Zero : InputManager.GetDirection();
 
    public override void _Ready()
    {
@@ -21,28 +24,99 @@ public partial class Player : Actor
       camera.LimitTop = (int)topLeftLimit.Position.Y;
       camera.LimitRight = (int)bottomRightLimit.Position.X;
       camera.LimitBottom = (int)bottomRightLimit.Position.Y;
+
+      Sensor.BodyEntered += (body) =>
+      {
+         if (body is Artillery artillery)
+         {
+            HintTweenPlugin.Play();
+            this.Mount = artillery;
+         }
+      };
+
+      Sensor.BodyExited += (body) =>
+      {
+         if (body is Artillery artillery)
+         {
+            HintTweenPlugin.Stop();
+            this.Mount = null;
+         }
+      };
+
+      Sensor.AreaEntered += (area) =>
+      {
+         if (area is Area2D)
+         {
+            HintTweenPlugin.Play();
+         }
+      };
+
+      Sensor.AreaExited += (area) =>
+      {
+         if (area is Area2D)
+         {
+            HintTweenPlugin.Stop();
+         }
+      };
    }
 
    public override void _Input(InputEvent @event)
    {
-      if (InputManager.IsSecondaryActionJustPressed())
+      if (Mount is MountInterface mount && mount.IsMounted)
       {
-         Fire();
+         if (InputManager.IsAux2ActionJustPressed())
+         {
+            mount.Unmount();
+            this.OnUnmount();
+         }
+         else
+         {
+            mount.HandlerOwnerInput(@event);
+         }
       }
+      else
+      {
+         if (InputManager.IsAux2ActionJustPressed())
+         {
+            if (Mount is Artillery artillery)
+            {
+               artillery.Mount(this);
+               this.OnMount();
+            }
+         }
 
-      if (InputManager.IsMainActionJustPressed())
-      {
-         Jump();
-      }
+         if (InputManager.IsSecondaryActionJustPressed())
+         {
+            Fire();
+         }
 
-      if (InputManager.IsRightModifierActionJustPressed())
-      {
-         Dash();
-      }
+         if (InputManager.IsMainActionJustPressed())
+         {
+            Jump();
+         }
 
-      if (InputManager.IsAux1ActionJustPressed())
-      {
-         Attack();
+         if (InputManager.IsRightModifierActionJustPressed())
+         {
+            Dash();
+         }
+
+         if (InputManager.IsAux1ActionJustPressed())
+         {
+            Attack();
+         }
       }
+   }
+
+   private void OnMount()
+   {
+      defaultValuesBag["Offset"] = this.camera.Offset;
+      this.camera.Offset = new Vector2(100f, 0);
+      IsStopped = true;
+   }
+
+   private void OnUnmount()
+   {
+      this.camera.Offset = (Vector2)defaultValuesBag["Offset"];
+      IsStopped = false;
    }
 }

@@ -19,7 +19,7 @@ public partial class Actor : CharacterBody2D
    public float RunningModifier { get; set; } = GOLDEN_RATIO * 2.5f; // 4.5 m/s
 
    [Export]
-   public float JumpHeight { get; set; } = 12.0f; // 12 meters
+   public float JumpHeight { get; set; } = 20.0f; // 12 meters
 
    [Export]
    public int JumpMax { get; set; } = 2;
@@ -52,6 +52,9 @@ public partial class Actor : CharacterBody2D
    public CollisionShape2D HitBox { get; set; }
 
    [Export]
+   public Node2D Mount { get; set; }
+
+   [Export]
    public Area2D HitArea { get; set; }
 
    [Export]
@@ -62,6 +65,8 @@ public partial class Actor : CharacterBody2D
    public Vector2 Direction { get; set; } = Vector2.Zero;
 
    public ActorState CurrentState { get; set; } = ActorState.Idle;
+
+   public bool IsStopped { get; set; } = false;
 
    public Vector2 FaceDirection
    {
@@ -110,9 +115,14 @@ public partial class Actor : CharacterBody2D
    [Export]
    public Marker2D hook;
 
+   [Export]
+   public Area2D Sensor;
+
    public virtual Vector2 GetInputDirection() => Vector2.Zero;
 
    private Bullet SpawnBullet() => BulletTemplate.Instantiate<Bullet>();
+
+   internal Godot.Collections.Dictionary<string, Variant> defaultValuesBag = new Godot.Collections.Dictionary<string, Variant>();
 
    public override void _Ready()
    {
@@ -282,6 +292,11 @@ public partial class Actor : CharacterBody2D
 
    private Vector2 GetNextVelocity(double delta)
    {
+      if (IsStopped) 
+      {
+         return Vector2.Zero;
+      }
+
       Vector2 velocity = Velocity;
 
       if (Direction == Vector2.Zero && KnockbackTimer <= 0.0f)

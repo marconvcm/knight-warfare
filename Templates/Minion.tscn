@@ -12,3 +12,4 @@ FireRange = 200.0
 [node name="HPPlugin" parent="Plugins" index="0"]
 MaxValue = 20.0
 DefaultValue = 20.0
+JumpHeight = 12.0
