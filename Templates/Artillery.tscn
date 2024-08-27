@@ -1,0 +1,363 @@
+[gd_scene load_steps=9 format=3 uid="uid://bbfw6jsqxagen"]
+
+[ext_resource type="Script" path="res://Templates/Artillery.cs" id="1_08fvs"]
+[ext_resource type="Texture2D" uid="uid://cqp6ai0q6qtls" path="res://Assets/Mockup_2.png" id="1_lqm2l"]
+[ext_resource type="Texture2D" uid="uid://80xcene5l4p2" path="res://Assets/VFX/All_Fire_Bullet_Pixel_16x16_00.png" id="2_ruj5c"]
+
+[sub_resource type="Gradient" id="Gradient_17iwd"]
+colors = PackedColorArray(0.87451, 0.243137, 0.141176, 1, 1, 1, 1, 0)
+
+[sub_resource type="Animation" id="Animation_xuhse"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Display/Axys/Cannon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(15, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Display/Axys/Cannon/CannonSmoke:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Display/Axys/Cannon/CannonFire:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Display/Axys/Cannon/CannonSpread:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Display/Axys/Gun:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(15, 4)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("Display/Axys/Gun/GunFire:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("Display/Axys/Gun/GunSmoke:emitting")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Display/Axys/Gun/Capsule:emitting")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_q5bdu"]
+resource_name = "cannon-fire"
+length = 1.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Display/Axys/Cannon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.6, 1.5),
+"transitions": PackedFloat32Array(0.04, 1, 1),
+"update": 0,
+"values": [Vector2(15, 0), Vector2(5, 0), Vector2(15, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Display/Axys/Cannon/CannonSmoke:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Display/Axys/Cannon/CannonFire:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.133333, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [true, false, false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Display/Axys/Cannon/CannonSpread:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.0666667),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_yybn7"]
+resource_name = "gun-fire"
+length = 0.3
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Display/Axys/Gun:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.3),
+"transitions": PackedFloat32Array(0.217638, 0.143587, 1),
+"update": 0,
+"values": [Vector2(15, 4), Vector2(12, 4), Vector2(15, 4)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Display/Axys/Gun/GunFire:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [true, false, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Display/Axys/Gun/GunSmoke:emitting")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Display/Axys/Gun/Capsule:emitting")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/4/type = "method"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0.05),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"TriggerGunFire"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xxu3a"]
+_data = {
+"RESET": SubResource("Animation_xuhse"),
+"cannon-fire": SubResource("Animation_q5bdu"),
+"gun-fire": SubResource("Animation_yybn7")
+}
+
+[node name="Artillery" type="StaticBody2D" node_paths=PackedStringArray("Axys", "RayCast", "Animation")]
+script = ExtResource("1_08fvs")
+Axys = NodePath("Display/Axys")
+RayCast = NodePath("Display/Axys/RayCast")
+Animation = NodePath("Animation")
+
+[node name="Display" type="Node2D" parent="."]
+
+[node name="Axys" type="Node2D" parent="Display"]
+position = Vector2(0, -10)
+
+[node name="Cannon" type="Sprite2D" parent="Display/Axys"]
+visible = false
+position = Vector2(15, 0)
+texture = ExtResource("1_lqm2l")
+centered = false
+offset = Vector2(-8, -6)
+region_enabled = true
+region_rect = Rect2(176, 34, 24, 12)
+
+[node name="CannonFire" type="Sprite2D" parent="Display/Axys/Cannon"]
+position = Vector2(22, 0.0318708)
+texture = ExtResource("2_ruj5c")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(432, 37, 13, 7)
+
+[node name="CannonSmoke" type="CPUParticles2D" parent="Display/Axys/Cannon"]
+position = Vector2(16, 0.0267029)
+emitting = false
+speed_scale = 2.0
+explosiveness = 0.25
+randomness = 1.0
+emission_shape = 1
+emission_sphere_radius = 3.0
+gravity = Vector2(5, -20)
+color = Color(0.646, 0.646, 0.646, 0.5)
+
+[node name="CannonSpread" type="CPUParticles2D" parent="Display/Axys/Cannon"]
+position = Vector2(16, 0.0267029)
+emitting = false
+amount = 20
+one_shot = true
+speed_scale = 2.0
+explosiveness = 1.0
+randomness = 1.0
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(2, 4)
+particle_flag_align_y = true
+direction = Vector2(0, 0)
+gravity = Vector2(50, 0)
+initial_velocity_max = 10.0
+angular_velocity_max = 503.72
+linear_accel_min = -20.0
+linear_accel_max = 20.0
+color = Color(0.980392, 0.415686, 0.0352941, 1)
+color_ramp = SubResource("Gradient_17iwd")
+
+[node name="Gun" type="Sprite2D" parent="Display/Axys"]
+position = Vector2(15, 4)
+texture = ExtResource("1_lqm2l")
+centered = false
+offset = Vector2(-8, -6)
+region_enabled = true
+region_rect = Rect2(176, 22, 24, 4)
+
+[node name="GunFire" type="Sprite2D" parent="Display/Axys/Gun"]
+position = Vector2(20, -3.5)
+texture = ExtResource("2_ruj5c")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(268, 214, 8, 5)
+
+[node name="GunSmoke" type="CPUParticles2D" parent="Display/Axys/Gun"]
+position = Vector2(16, -4)
+emitting = false
+one_shot = true
+speed_scale = 2.0
+explosiveness = 0.25
+randomness = 1.0
+emission_shape = 1
+emission_sphere_radius = 3.0
+gravity = Vector2(5, -20)
+color = Color(0.646, 0.646, 0.646, 0.5)
+
+[node name="Capsule" type="CPUParticles2D" parent="Display/Axys/Gun"]
+z_index = 10
+position = Vector2(-15, -8)
+emitting = false
+amount = 1
+lifetime = 0.3
+one_shot = true
+speed_scale = 4.0
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector2(0, -1)
+spread = 0.0
+gravity = Vector2(-10, 90)
+initial_velocity_min = 20.0
+initial_velocity_max = 20.0
+color = Color(0.805, 0.615, 0, 1)
+
+[node name="Barrel" type="Sprite2D" parent="Display/Axys"]
+texture = ExtResource("1_lqm2l")
+centered = false
+offset = Vector2(-8, -6)
+region_enabled = true
+region_rect = Rect2(160, 34, 16, 12)
+
+[node name="RayCast" type="RayCast2D" parent="Display/Axys"]
+position = Vector2(31, 0)
+target_position = Vector2(300, 0)
+
+[node name="Base" type="Sprite2D" parent="Display"]
+position = Vector2(0, -6)
+texture = ExtResource("1_lqm2l")
+region_enabled = true
+region_rect = Rect2(161, 52, 14, 12)
+
+[node name="Shape" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-7, 0, 7, 0, 7, -2, 4, -8, 2, -8, 2, -12, -2, -12, -2, -8, -4, -8, -7, -2)
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_xxu3a")
+}
+speed_scale = 2.0

@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://bbyml6t6h377q"]
+
+[ext_resource type="PackedScene" uid="uid://c0c2ugwjdxhg2" path="res://Templates/Bullet.tscn" id="1_8l606"]
+[ext_resource type="Texture2D" uid="uid://80xcene5l4p2" path="res://Assets/VFX/All_Fire_Bullet_Pixel_16x16_00.png" id="2_rmvep"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xq5oo"]
+atlas = ExtResource("2_rmvep")
+region = Rect2(96, 384, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_plrg6"]
+atlas = ExtResource("2_rmvep")
+region = Rect2(112, 384, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ga85j"]
+atlas = ExtResource("2_rmvep")
+region = Rect2(128, 384, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fx0js"]
+atlas = ExtResource("2_rmvep")
+region = Rect2(144, 384, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ymc18"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xq5oo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_plrg6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ga85j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fx0js")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Bullet" instance=ExtResource("1_8l606")]
+DistanceLifeSpan = 1500.0
+
+[node name="Sprite" parent="." index="1"]
+sprite_frames = SubResource("SpriteFrames_ymc18")
+frame_progress = 0.0953283
+
+[node name="Particles" parent="." index="2"]
+position = Vector2(-2, 0)
+emitting = false
+emission_rect_extents = Vector2(1, 1)
+
+[node name="Light" parent="." index="3"]
+enabled = false
