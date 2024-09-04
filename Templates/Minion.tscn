@@ -8,4 +8,8 @@ script = ExtResource("2_8ue1s")
 PlayerPath = null
 AttackRange = 30.0
 FireRange = 200.0
+
+[node name="HPPlugin" parent="Plugins" index="0"]
+MaxValue = 20.0
+DefaultValue = 20.0
 JumpHeight = 12.0
